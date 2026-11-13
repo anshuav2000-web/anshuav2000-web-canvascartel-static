@@ -53,6 +53,61 @@ const floatingIcons = [
   { icon: Zap, top: "28%", right: "38%", delay: 0.15, duration: 6, x: 10, y: -30 },
 ];
 
+// Interactive Floating Icon with Magnetic Repel (Push-back) Effect
+const FloatingIcon = ({ item }: { item: typeof floatingIcons[0] }) => {
+  const [repelOffset, setRepelOffset] = useState({ x: 0, y: 0 });
+  const IconComponent = item.icon;
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const distanceX = e.clientX - centerX;
+    const distanceY = e.clientY - centerY;
+    const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+    // Magnetic repel (push away like matching magnetic poles) when within 140px
+    if (distance < 140) {
+      const force = (140 - distance) / 140;
+      setRepelOffset({
+        x: -distanceX * force * 0.8,
+        y: -distanceY * force * 0.8,
+      });
+    } else {
+      setRepelOffset({ x: 0, y: 0 });
+    }
+  };
+
+  return (
+    <motion.div
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => setRepelOffset({ x: 0, y: 0 })}
+      animate={{
+        x: repelOffset.x,
+        y: repelOffset.y,
+      }}
+      transition={{ type: "spring", stiffness: 200, damping: 15 }}
+      style={{ top: item.top, left: item.left, right: item.right }}
+      className="absolute z-0 p-3 rounded-2xl bg-transparent border-0 text-gray-400/40 pointer-events-auto cursor-pointer"
+    >
+      <motion.div
+        animate={{
+          y: [0, item.y, 0],
+          x: [0, item.x, 0],
+          opacity: [0.25, 0.5, 0.25],
+        }}
+        transition={{
+          duration: item.duration,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      >
+        <IconComponent className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400/40 hover:text-primary transition-colors duration-300" />
+      </motion.div>
+    </motion.div>
+  );
+};
+
 export const HeroSection = () => {
   const [visible, setVisible] = useState(false);
   const { scrollY } = useScroll();
@@ -75,7 +130,7 @@ export const HeroSection = () => {
 
   return (
     <section className={`hero-section relative min-h-screen flex items-center justify-center overflow-hidden bg-[var(--background)] transition-opacity duration-700 ${visible ? "opacity-100" : "opacity-0"}`}>
-      {/* Vibrant, bright, rich gradient glow background & Emanating Floating Icons */}
+      {/* Vibrant background glow & Emanating Floating Icons with Magnetic Repel */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px] bg-gradient-to-br from-primary/35 via-accent/30 to-transparent rounded-full blur-[160px] animate-pulse" />
         <div className="absolute top-1/3 -left-40 w-[500px] h-[500px] bg-primary/25 rounded-full blur-[160px]" />
@@ -84,32 +139,10 @@ export const HeroSection = () => {
         {/* Subtle grid pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:50px_50px]" aria-hidden="true" />
 
-        {/* Floating Service & Design Tool Icons Emanating From Center */}
-        {floatingIcons.map((item, index) => {
-          const IconComponent = item.icon;
-          return (
-            <motion.div
-              key={index}
-              initial={{ scale: 0, opacity: 0, x: 0, y: 0 }}
-              animate={{ 
-                scale: 1, 
-                opacity: [0.4, 0.8, 0.4],
-                x: [0, item.x, 0],
-                y: [0, item.y, 0]
-              }}
-              transition={{
-                scale: { duration: 0.8, delay: item.delay, ease: "easeOut" },
-                opacity: { duration: item.duration, repeat: Infinity, ease: "easeInOut" },
-                x: { duration: item.duration, repeat: Infinity, ease: "easeInOut" },
-                y: { duration: item.duration, repeat: Infinity, ease: "easeInOut" }
-              }}
-              style={{ top: item.top, left: item.left, right: item.right }}
-              className="absolute z-0 p-3 rounded-2xl bg-[var(--card)]/60 backdrop-blur-md border border-[var(--border)]/40 shadow-[0_0_25px_hsl(var(--primary)/0.15)] text-primary hover:scale-125 transition-transform duration-300 pointer-events-auto cursor-pointer"
-            >
-              <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
-            </motion.div>
-          );
-        })}
+        {/* Floating Icons with Magnetic Push-Back Effect */}
+        {floatingIcons.map((item, index) => (
+          <FloatingIcon key={index} item={item} />
+        ))}
       </div>
 
       {/* Content container */}
