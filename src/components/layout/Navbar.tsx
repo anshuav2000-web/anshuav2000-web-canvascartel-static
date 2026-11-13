@@ -119,12 +119,6 @@ export const Navbar = () => {
                 className="h-9 w-auto sm:h-11 max-w-[180px] object-contain transition-all duration-300 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_hsl(0,_85%,_55%_/_0.4)]"
               />
             </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#3a2a1a]/20 to-[#2a1a0a]/20 border border-[#3a2a1a]/30">
-              <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-[#ff6b4a]" />
-              <span className="text-sm font-outfit font-bold text-[#f0e8e0] tracking-wide">
-                {siteName}
-              </span>
-            </div>
           </Link>
 
           {/* Center: Desktop Navigation */}

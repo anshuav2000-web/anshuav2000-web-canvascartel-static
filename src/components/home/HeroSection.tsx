@@ -4,18 +4,15 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import Flip from "gsap/Flip";
-import { MotionValue, useScroll, useTransform, useSpring } from "framer-motion";
+import { useScroll, useTransform, useSpring } from "framer-motion";
 import { useGSAP } from "@gsap/react";
 import { ArrowRight, Play, Sparkles } from "lucide-react";
 
-// Register GSAP plugins
-gsap.registerPlugin(ScrollTrigger, Flip);
+gsap.registerPlugin(ScrollTrigger);
 
-// Hero data
 const heroData = {
   badge: "Creative Design & Marketing Studio",
-  title: ["We build", "brands", "that people", "remember."],
+  title: "We build brands that people remember.",
   subtitle: "We turn creativity into impact and collaboration into growth. From eye-catching advertisements to complete marketing plans, we help brands show up with clarity, confidence, and consistency.",
   primaryButton: "Start Your Project",
   primaryLink: "/contact",
@@ -29,348 +26,127 @@ const heroData = {
 };
 
 export const HeroSection = () => {
-  const [mouseOver, setMouseOver] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
   const [visible, setVisible] = useState(false);
-
-  // Framer motion springs
   const { scrollY } = useScroll();
-  const ySpring = useSpring(scrollY, { stiffness: 100, damping: 30 });
-  const opacitySpring = useSpring(0, { stiffness: 50, damping: 20 });
 
-  // Animation state
   useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 100);
+    const timer = setTimeout(() => setVisible(true), 50);
     return () => clearTimeout(timer);
   }, []);
 
-  // GSAP animations with ScrollTrigger
   useGSAP(() => {
     const hero = document.querySelector(".hero-section");
-    const titleLines = document.querySelectorAll(".title-line");
-    const subtitle = document.querySelector(".subtitle");
-    const stats = document.querySelectorAll(".stat-item");
-
     if (!hero) return;
 
-    // Initial state
-    gsap.set(titleLines, { opacity: 0, y: 50 });
-    gsap.set(subtitle, { opacity: 0, y: 30 });
-    gsap.set(stats, { opacity: 0, y: 20 });
-
-    // Scroll-triggered animations with SplitText effect (simulated with line-by-line)
-    const lineAnim = gsap.fromTo(
-      titleLines,
-      {
-        opacity: 0,
-        y: 60,
-      },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "power2.out",
-        stagger: 0.15,
-        scrollTrigger: {
-          trigger: hero,
-          start: "top 85%",
-          end: "top 50%",
-          scrub: 1.5,
-          markers: false,
-        },
-      }
-    );
-
-    // Subtitle animation
     gsap.fromTo(
-      subtitle,
-      {
-        opacity: 0,
-        y: 40,
-      },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: hero,
-          start: "top 75%",
-          end: "top 40%",
-          scrub: 1,
-          markers: false,
-        },
-      }
+      ".hero-content-anim",
+      { opacity: 0, y: 50 },
+      { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power3.out" }
     );
-
-    // CTA animation
-    gsap.fromTo(
-      document.querySelectorAll(".cta-group"),
-      {
-        opacity: 0,
-        y: 30,
-      },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        ease: "power2.out",
-        stagger: 0.1,
-        scrollTrigger: {
-          trigger: hero,
-          start: "top 70%",
-          end: "top 35%",
-          scrub: 1,
-          markers: false,
-        },
-      }
-    );
-
-    // Stats animation
-    gsap.fromTo(
-      stats,
-      {
-        opacity: 0,
-        y: 30,
-      },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        ease: "power2.out",
-        stagger: 0.1,
-        scrollTrigger: {
-          trigger: hero,
-          start: "top 65%",
-          end: "top 30%",
-          scrub: 1,
-          markers: false,
-        },
-      }
-    );
-
-    // Magnetic effect on CTA buttons
-    const ctaButtons = document.querySelectorAll(".magnetic-cta");
-    ctaButtons.forEach((btn) => {
-      const rect = btn.getBoundingClientRect();
-      const button = btn as HTMLElement;
-
-      document.addEventListener("mousemove", (e) => {
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-
-        const moveX = (x - centerX) / centerX * -3;
-        const moveY = (y - centerY) / centerY * -3;
-
-        gsap.to(button, {
-          x: moveX,
-          y: moveY,
-          duration: 0.2,
-          cursor: "none",
-          overwrite: true,
-        });
-      });
-
-      document.addEventListener("mouseleave", () => {
-        gsap.to(button, {
-          x: 0,
-          y: 0,
-          duration: 0.5,
-          ease: "power2.out",
-          overwrite: true,
-        });
-      });
-    });
-
-    // Scrolling to hide cursor on mobile
-    const timer = setTimeout(() => {
-      const mobileQuery = window.matchMedia("(pointer: coarse)").matches;
-      if (mobileQuery) {
-        gsap.to("#custom-cursor", { opacity: 0, duration: 0.3 });
-      }
-    }, 500);
-
-    return () => {
-      document.removeEventListener("mousemove", () => {});
-      clearTimeout(timer);
-    };
   }, []);
 
-  // Build CSS class for the hero
-  const heroClass = `hero-section relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-hero transition-opacity duration-700 ${
-    visible ? "opacity-100" : "opacity-0"
-  }`;
-
-  // Scroll progress for the hero (fades out on scroll)
-  const scrollProgress = useTransform(scrollY, [0, 800], [0, 1]);
-
   return (
-    <section className={heroClass}>
-      {/* Background layers */}
+    <section className={`hero-section relative min-h-screen flex items-center justify-center overflow-hidden bg-[var(--background)] transition-opacity duration-700 ${visible ? "opacity-100" : "opacity-0"}`}>
+      {/* Vibrant, bright, rich gradient glow background (fixing dark black issue) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        {/* Gradient mesh */}
-        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[150px] animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[120px] animate-pulse animation-delay-1000" />
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-primary/5 rounded-full blur-[200px] animate-pulse animation-delay-2000" />
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-gradient-to-br from-primary/30 via-accent/25 to-transparent rounded-full blur-[140px] animate-pulse" />
+        <div className="absolute top-1/3 -left-40 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[160px]" />
+        <div className="absolute bottom-10 -right-40 w-[600px] h-[600px] bg-accent/25 rounded-full blur-[180px]" />
 
-        {/* Floating particles */}
-        <div className="absolute top-20 left-10 w-2 h-2 rounded-full bg-primary/30 animate-float" />
-        <div className="absolute top-40 right-20 w-1.5 h-1.5 rounded-full bg-accent/30 animate-float animation-delay-500" />
-        <div className="absolute top-60 left-1/3 w-1 h-1 rounded-full bg-primary/20 animate-float animation-delay-1000" />
-        <div className="absolute top-80 right-1/4 w-2 h-2 rounded-full bg-accent/20 animate-float animation-delay-1500" />
-        <div className="absolute top-100 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-primary/20 animate-float animation-delay-2000" />
-        <div className="absolute top-120 right-1/3 w-1 h-1 rounded-full bg-accent/20 animate-float animation-delay-2500" />
-
-        {/* Grid overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:60px_60px]" aria-hidden="true" />
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:50px_50px]" aria-hidden="true" />
       </div>
 
-      {/* Content */}
-      <div className="container mx-auto px-4 sm:px-6 pt-24 sm:pt-28 md:pt-20 pb-16 relative z-10">
+      {/* Content container */}
+      <div className="container mx-auto px-4 sm:px-6 pt-28 sm:pt-32 pb-20 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          {/* Badge */}
+          
+          {/* Top Badge */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-border/40 bg-secondary/30 backdrop-blur-sm mb-6 sm:mb-8"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+            className="hero-content-anim inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-primary/30 bg-primary/10 backdrop-blur-md mb-8 shadow-[0_0_20px_hsl(var(--primary)/0.2)]"
           >
-            <motion.span
-              animate={{ scale: [1, 1.15, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="w-2 h-2 rounded-full bg-gradient-to-r from-primary to-accent"
-            />
-            <span className="text-xs sm:text-sm font-medium text-muted-foreground tracking-wide uppercase">
+            <Sparkles className="w-4 h-4 text-primary animate-spin" style={{ animationDuration: "6s" }} />
+            <span className="text-xs sm:text-sm font-semibold tracking-wide text-foreground uppercase">
               {heroData.badge}
             </span>
           </motion.div>
 
-          {/* Split headline with line-by-line reveal */}
-          <div className="relative max-w-4xl mx-auto px-2">
-            <div className="grid grid-cols-1 gap-2 sm:gap-3">
-              {heroData.title.map((line, index) => (
-                <div
-                  key={index}
-                  className={`title-line relative overflow-hidden px-2 ${
-                    index === 1 ? "col-span-1 sm:col-span-2" : ""
-                  } ${index === 2 ? "col-span-1 sm:col-span-1" : ""}`}
-                >
-                  {/* Animated background for each line */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl" />
-                  <div className="relative h-full flex items-center">
-                    <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-7xl font-display font-bold leading-tight text-foreground">
-                      <span className="text-gradient">{line}</span>
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Subtext */}
-          <motion.p
-            className="subtitle text-base sm:text-lg md:text-xl lg:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 sm:mb-10 px-4 leading-relaxed"
+          {/* Main Headline */}
+          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="hero-content-anim text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-extrabold tracking-tight text-foreground mb-8 leading-[1.08]"
+          >
+            We build <span className="text-gradient drop-shadow-sm">brands</span> that people <span className="text-gradient">remember.</span>
+          </motion.h1>
+
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="hero-content-anim text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed font-normal"
           >
             {heroData.subtitle}
           </motion.p>
 
-          {/* CTA Buttons with magnetic effect */}
+          {/* CTA Buttons */}
           <motion.div
-            className="cta-group flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.6 }}
-          >
-            <motion.div
-              whileHover={{ scale: 1.03, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              className="magnetic-cta hover-lift"
-            >
-              <Button
-                variant="gradient"
-                size="lg"
-                className="w-full sm:w-auto text-sm sm:text-base h-12"
-                asChild
-              >
-                <Link to={heroData.primaryLink}>
-                  {heroData.primaryButton}
-                  <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
-                </Link>
-              </Button>
-            </motion.div>
-
-            <motion.div
-              whileHover={{ scale: 1.03, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              className="magnetic-cta hover-lift"
-            >
-              <Button
-                variant="glass"
-                size="lg"
-                className="w-full sm:w-auto text-sm sm:text-base h-12"
-                asChild
-              >
-                <Link to={heroData.secondaryLink}>
-                  <Play className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                  {heroData.secondaryButton}
-                </Link>
-              </Button>
-            </motion.div>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            className="stats-grid grid grid-cols-3 gap-3 sm:gap-6 md:gap-8 mt-12 sm:mt-16 md:mt-20 pt-8 sm:pt-10 border-t border-border/30"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.8 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="hero-content-anim flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-16"
+          >
+            <Button
+              variant="gradient"
+              size="lg"
+              className="w-full sm:w-auto h-14 px-8 text-base font-semibold shadow-lg hover:shadow-primary/25 hover:scale-105 transition-all duration-300 rounded-2xl"
+              asChild
+            >
+              <Link to={heroData.primaryLink}>
+                {heroData.primaryButton}
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+
+            <Button
+              variant="glass"
+              size="lg"
+              className="w-full sm:w-auto h-14 px-8 text-base font-semibold border border-border/60 hover:border-primary/50 hover:bg-secondary/50 hover:scale-105 transition-all duration-300 rounded-2xl"
+              asChild
+            >
+              <Link to={heroData.secondaryLink}>
+                <Play className="mr-2 h-4 w-4 fill-foreground" />
+                {heroData.secondaryButton}
+              </Link>
+            </Button>
+          </motion.div>
+
+          {/* Stats Bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="hero-content-anim grid grid-cols-3 gap-4 sm:gap-8 max-w-2xl mx-auto p-6 sm:p-8 rounded-3xl bg-[var(--card)]/80 backdrop-blur-xl border border-[var(--border)]/60 shadow-xl"
           >
             {heroData.stats.map((stat, index) => (
-              <div key={stat.label} className="stat-item text-center">
-                <motion.div
-                  whileHover={{ scale: 1.08 }}
-                  className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-display font-bold text-gradient mb-1 sm:mb-2 block"
-                >
+              <div key={index} className="text-center">
+                <div className="text-2xl sm:text-4xl md:text-5xl font-display font-extrabold text-gradient mb-1">
                   {stat.number}
-                </motion.div>
-                <div className="text-xs sm:text-sm text-muted-foreground tracking-wide">
+                </div>
+                <div className="text-xs sm:text-sm font-medium text-muted-foreground tracking-wide">
                   {stat.label}
                 </div>
               </div>
             ))}
           </motion.div>
 
-          {/* Decorative sparkle */}
-          <motion.div
-            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: 4, repeat: Infinity, delay: 2.5 }}
-            className="absolute top-12 left-10 hidden sm:block"
-          >
-            <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-primary/20" />
-          </motion.div>
         </div>
       </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 hidden sm:block"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
-      >
-        <div className="w-6 h-8 sm:w-8 sm:h-10 rounded-full border-2 border-border/30 flex items-start justify-center p-1.5 sm:p-2 cursor-pointer">
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            className="w-1.5 h-3 sm:h-4 bg-gradient-to-b from-primary to-transparent rounded-full"
-          />
-        </div>
-      </motion.div>
     </section>
   );
 };
