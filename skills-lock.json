@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "skills": {
+    "coolify": {
+      "source": "TerminalSkills/skills",
+      "sourceType": "github",
+      "skillPath": "skills/coolify/SKILL.md",
+      "computedHash": "70bd37216536b4c9c1a5f323c8a02c5d2fcdf32225b021890e6d9a4451b3756b"
+    }
+  }
+}

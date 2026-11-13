@@ -1,0 +1,25 @@
+project_id = "dsuvcvbtxdftlbhuvsnv"
+
+[functions.send-lead-notification]
+verify_jwt = false
+
+[functions.send-webhook]
+verify_jwt = false
+
+[functions.send-application-notification]
+verify_jwt = false
+
+[functions.generate-sitemap]
+verify_jwt = false
+
+[functions.generate-robots]
+verify_jwt = false
+
+[functions.ping-search-engines]
+verify_jwt = false
+
+[functions.analyze-seo]
+verify_jwt = false
+
+[functions.gsc-indexing-status]
+verify_jwt = false

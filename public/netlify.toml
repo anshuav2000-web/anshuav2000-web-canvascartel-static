@@ -1,0 +1,61 @@
+# Netlify configuration for cache headers
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.woff2"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Dynamic sitemap.xml - proxied to Supabase Edge Function
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "https://dsuvcvbtxdftlbhuvsnv.supabase.co/functions/v1/generate-sitemap"
+  status = 200
+  force = true
+
+# Dynamic robots.txt - proxied to Supabase Edge Function
+[[redirects]]
+  from = "/robots.txt"
+  to = "https://dsuvcvbtxdftlbhuvsnv.supabase.co/functions/v1/generate-robots"
+  status = 200
+  force = true
+
+# SPA fallback routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

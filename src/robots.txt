@@ -1,0 +1,27 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://canvascartel.in/sitemap.xml
+
+# Indexation policy
+Indexation: index
+Follow: yes
+
+# Crawl-delay for respectful scraping
+Crawl-delay: 1
+
+# Media resources
+Crawl-delay: 3
+
+# Disallow sensitive paths
+Disallow: /admin
+Disallow: /auth
+Disallow: /reset-password
+
+# Allow images
+Allow: /images/
+Allow: /assets/
+
+# Google News
+User-agent: GoogleNews
+Allow: /
