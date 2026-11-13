@@ -4,9 +4,23 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import { useScroll, useTransform, useSpring } from "framer-motion";
+import { useScroll } from "framer-motion";
 import { useGSAP } from "@gsap/react";
-import { ArrowRight, Play, Sparkles } from "lucide-react";
+import { 
+  ArrowRight, 
+  Play, 
+  Sparkles, 
+  Palette, 
+  Code, 
+  Video, 
+  Camera, 
+  Megaphone, 
+  Cpu, 
+  Layers, 
+  PenTool, 
+  Globe, 
+  Zap 
+} from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -24,6 +38,20 @@ const heroData = {
     { number: "5+", label: "Years Experience" },
   ],
 };
+
+// Floating background icons representing services & graphic design tools (emanating from center)
+const floatingIcons = [
+  { icon: Palette, top: "20%", left: "15%", delay: 0.1, duration: 6, x: -30, y: -20 },
+  { icon: PenTool, top: "15%", right: "18%", delay: 0.3, duration: 7, x: 40, y: -25 },
+  { icon: Code, top: "45%", left: "8%", delay: 0.5, duration: 8, x: -50, y: 15 },
+  { icon: Video, top: "40%", right: "10%", delay: 0.2, duration: 6.5, x: 45, y: 20 },
+  { icon: Camera, top: "75%", left: "20%", delay: 0.4, duration: 7.5, x: -35, y: 40 },
+  { icon: Megaphone, top: "70%", right: "22%", delay: 0.6, duration: 6, x: 35, y: 35 },
+  { icon: Layers, top: "25%", left: "30%", delay: 0.25, duration: 7, x: -15, y: -35 },
+  { icon: Cpu, top: "65%", right: "32%", delay: 0.45, duration: 8.5, x: 25, y: 45 },
+  { icon: Globe, top: "82%", left: "45%", delay: 0.35, duration: 9, x: 0, y: 50 },
+  { icon: Zap, top: "28%", right: "38%", delay: 0.15, duration: 6, x: 10, y: -30 },
+];
 
 export const HeroSection = () => {
   const [visible, setVisible] = useState(false);
@@ -47,14 +75,41 @@ export const HeroSection = () => {
 
   return (
     <section className={`hero-section relative min-h-screen flex items-center justify-center overflow-hidden bg-[var(--background)] transition-opacity duration-700 ${visible ? "opacity-100" : "opacity-0"}`}>
-      {/* Vibrant, bright, rich gradient glow background (fixing dark black issue) */}
+      {/* Vibrant, bright, rich gradient glow background & Emanating Floating Icons */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-gradient-to-br from-primary/30 via-accent/25 to-transparent rounded-full blur-[140px] animate-pulse" />
-        <div className="absolute top-1/3 -left-40 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[160px]" />
-        <div className="absolute bottom-10 -right-40 w-[600px] h-[600px] bg-accent/25 rounded-full blur-[180px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px] bg-gradient-to-br from-primary/35 via-accent/30 to-transparent rounded-full blur-[160px] animate-pulse" />
+        <div className="absolute top-1/3 -left-40 w-[500px] h-[500px] bg-primary/25 rounded-full blur-[160px]" />
+        <div className="absolute bottom-10 -right-40 w-[600px] h-[600px] bg-accent/30 rounded-full blur-[180px]" />
 
         {/* Subtle grid pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:50px_50px]" aria-hidden="true" />
+
+        {/* Floating Service & Design Tool Icons Emanating From Center */}
+        {floatingIcons.map((item, index) => {
+          const IconComponent = item.icon;
+          return (
+            <motion.div
+              key={index}
+              initial={{ scale: 0, opacity: 0, x: 0, y: 0 }}
+              animate={{ 
+                scale: 1, 
+                opacity: [0.4, 0.8, 0.4],
+                x: [0, item.x, 0],
+                y: [0, item.y, 0]
+              }}
+              transition={{
+                scale: { duration: 0.8, delay: item.delay, ease: "easeOut" },
+                opacity: { duration: item.duration, repeat: Infinity, ease: "easeInOut" },
+                x: { duration: item.duration, repeat: Infinity, ease: "easeInOut" },
+                y: { duration: item.duration, repeat: Infinity, ease: "easeInOut" }
+              }}
+              style={{ top: item.top, left: item.left, right: item.right }}
+              className="absolute z-0 p-3 rounded-2xl bg-[var(--card)]/60 backdrop-blur-md border border-[var(--border)]/40 shadow-[0_0_25px_hsl(var(--primary)/0.15)] text-primary hover:scale-125 transition-transform duration-300 pointer-events-auto cursor-pointer"
+            >
+              <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* Content container */}
