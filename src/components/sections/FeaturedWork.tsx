@@ -18,6 +18,7 @@ const projects = [
     category: "branding",
     description: "Complete brand identity redesign for a SaaS startup",
     tags: ["Branding", "Identity", "Strategy"],
+    icon: Palette,
     content: (
       <div className="relative w-full h-full rounded-xl overflow-hidden">
         <div className="w-full h-full bg-gradient-to-br from-indigo-500/30 to-purple-600/30 flex items-center justify-center">
@@ -32,6 +33,7 @@ const projects = [
     category: "websites",
     description: "Modern e-commerce platform for a boutique flower shop",
     tags: ["Web", "E-commerce", "Design"],
+    icon: Globe,
     content: (
       <div className="relative w-full h-full bg-gradient-to-br from-blue-500/30 to-cyan-600/30 flex items-center justify-center">
         <Globe className="w-12 h-12 text-white/50" />
@@ -44,6 +46,7 @@ const projects = [
     category: "video",
     description: "Brand film for premium fitness equipment company",
     tags: ["Video", "Brand Film", "Motion"],
+    icon: Video,
     content: (
       <div className="relative w-full h-full bg-gradient-to-br from-orange-500/30 to-red-600/30 flex items-center justify-center">
         <Video className="w-12 h-12 text-white/50" />
@@ -56,6 +59,7 @@ const projects = [
     category: "social",
     description: "Social media strategy and content for café launch",
     tags: ["Social", "Campaign", "Content"],
+    icon: Megaphone,
     content: (
       <div className="relative w-full h-full bg-gradient-to-br from-pink-500/30 to-rose-600/30 flex items-center justify-center">
         <Megaphone className="w-12 h-12 text-white/50" />
@@ -68,6 +72,7 @@ const projects = [
     category: "branding",
     description: "Eco-friendly brand identity for organic products",
     tags: ["Branding", "Identity", "Sustainable"],
+    icon: Palette,
     content: (
       <div className="relative w-full h-full bg-gradient-to-br from-emerald-500/30 to-teal-600/30 flex items-center justify-center">
         <Palette className="w-12 h-12 text-white/50" />
@@ -80,6 +85,7 @@ const projects = [
     category: "photo",
     description: "Print advertising campaign for luxury watches",
     tags: ["Photography", "Print", "Luxury"],
+    icon: Camera,
     content: (
       <div className="relative w-full h-full bg-gradient-to-br from-violet-500/30 to-purple-600/30 flex items-center justify-center">
         <Camera className="w-12 h-12 text-white/50" />

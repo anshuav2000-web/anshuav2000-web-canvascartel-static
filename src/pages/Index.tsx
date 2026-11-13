@@ -9,8 +9,7 @@ import {
   IndustriesTabs, 
   TestimonialsSlider, 
   FAQSection, 
-  LargeCTA, 
-  Footer 
+  LargeCTA 
 } from "@/components/sections";
 
 const Index = () => {
@@ -44,9 +43,6 @@ const Index = () => {
       
       {/* Large CTA section */}
       <LargeCTA />
-      
-      {/* Footer */}
-      <Footer />
     </Layout>
   );
 };

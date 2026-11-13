@@ -7,7 +7,6 @@ import { IndustriesTabs } from "./IndustriesTabs";
 import { TestimonialsSlider } from "./TestimonialsSlider";
 import { FAQSection } from "./FAQSection";
 import { LargeCTA } from "./LargeCTA";
-import { Footer } from "./LargeCTA";
 
 export { 
   LogosMarquee, 
@@ -18,6 +17,5 @@ export {
   IndustriesTabs, 
   TestimonialsSlider, 
   FAQSection, 
-  LargeCTA, 
-  Footer 
+  LargeCTA 
 };

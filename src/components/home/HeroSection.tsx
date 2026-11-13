@@ -34,8 +34,8 @@ export const HeroSection = () => {
   const [visible, setVisible] = useState(false);
 
   // Framer motion springs
-  const scrollY = useScroll();
-  const ySpring = useSpring(scrollY.y, { stiffness: 100, damping: 30 });
+  const { scrollY } = useScroll();
+  const ySpring = useSpring(scrollY, { stiffness: 100, damping: 30 });
   const opacitySpring = useSpring(0, { stiffness: 50, damping: 20 });
 
   // Animation state
@@ -204,7 +204,7 @@ export const HeroSection = () => {
   }`;
 
   // Scroll progress for the hero (fades out on scroll)
-  const scrollProgress = useTransform(scrollY, [0, 0.8], [0, 1]);
+  const scrollProgress = useTransform(scrollY, [0, 800], [0, 1]);
 
   return (
     <section className={heroClass}>
