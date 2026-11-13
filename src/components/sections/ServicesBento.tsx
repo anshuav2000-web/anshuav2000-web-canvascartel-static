@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect } from "react";
-import { gsap } from "gsap";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { 
   Palette, 
@@ -9,199 +8,182 @@ import {
   Camera, 
   Target, 
   Workflow, 
-  Sparkles 
+  Sparkles,
+  ArrowUpRight
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
-// Service cards data
 const services = [
   {
     id: 1,
     icon: Palette,
     title: "Branding & Graphic Design",
-    description: "Custom brand identities, logos, and visual systems that make your brand unforgettable.",
-    gradient: "from-indigo-500 to-purple-600",
-    glow: "hsl(262, 85%, 60%)",
+    description: "Custom brand identities, striking logos, and comprehensive visual systems that make your brand unforgettable.",
+    gradient: "from-pink-500 via-rose-500 to-orange-500",
+    glow: "rgba(244, 63, 94, 0.25)",
+    span: "col-span-1 lg:col-span-2 row-span-2",
+    badge: "Most Popular",
   },
   {
     id: 2,
-    icon: Megaphone,
-    title: "Social Media Marketing",
-    description: "Strategic social content that builds community, drives engagement, and grows your audience.",
-    gradient: "from-pink-500 to-rose-600",
-    glow: "hsl(348, 90%, 60%)",
+    icon: Globe,
+    title: "Website Development",
+    description: "Lightning-fast, responsive, conversion-optimized websites built with modern web technologies.",
+    gradient: "from-blue-500 via-indigo-500 to-cyan-500",
+    glow: "rgba(59, 130, 246, 0.25)",
+    span: "col-span-1 lg:col-span-2 row-span-1",
+    badge: "High Performance",
   },
   {
     id: 3,
-    icon: Globe,
-    title: "Website Development",
-    description: "Fast, responsive, conversion-optimized websites built with the latest technologies.",
-    gradient: "from-blue-500 to-cyan-600",
-    glow: "hsl(200, 85%, 55%)",
+    icon: Megaphone,
+    title: "Social Media Marketing",
+    description: "Strategic content campaigns that build loyal communities, drive engagement, and accelerate growth.",
+    gradient: "from-purple-500 via-pink-500 to-rose-500",
+    glow: "rgba(168, 85, 247, 0.25)",
+    span: "col-span-1 lg:col-span-1 row-span-1",
   },
   {
     id: 4,
     icon: Video,
     title: "Video Production",
-    description: "Professional video production from concept to final cut, including motion graphics.",
-    gradient: "from-orange-500 to-red-600",
-    glow: "hsl(25, 90%, 60%)",
+    description: "Cinematic brand films and motion graphics from concept to final cut.",
+    gradient: "from-orange-500 via-amber-500 to-red-500",
+    glow: "rgba(249, 115, 22, 0.25)",
+    span: "col-span-1 lg:col-span-1 row-span-1",
   },
   {
     id: 5,
-    icon: Camera,
-    title: "Photography",
-    description: "High-quality product and creative photography that captures your brand essence.",
-    gradient: "from-emerald-500 to-teal-600",
-    glow: "hsl(160, 85%, 45%)",
+    icon: Workflow,
+    title: "AI & Business Automation",
+    description: "Advanced AI agents, WhatsApp workflows, and CRM automation to scale operations effortlessly.",
+    gradient: "from-cyan-500 via-teal-500 to-blue-500",
+    glow: "rgba(6, 182, 212, 0.25)",
+    span: "col-span-1 lg:col-span-2 row-span-1",
+    badge: "Cutting Edge",
   },
   {
     id: 6,
-    icon: Target,
-    title: "Digital Marketing Strategy",
-    description: "Data-driven marketing strategies with SEO, campaigns, and performance tracking.",
-    gradient: "from-violet-500 to-purple-700",
-    glow: "hsl(262, 85%, 55%)",
+    icon: Camera,
+    title: "Photography & Content",
+    description: "Stunning product and creative photography that captures your brand essence.",
+    gradient: "from-emerald-500 via-teal-500 to-green-500",
+    glow: "rgba(16, 185, 129, 0.25)",
+    span: "col-span-1 lg:col-span-1 row-span-1",
   },
   {
     id: 7,
-    icon: Workflow,
-    title: "AI & Business Automation",
-    description: "AI workflows, WhatsApp bots, lead generation, and CRM automation to scale your business.",
-    gradient: "from-cyan-500 to-blue-600",
-    glow: "hsl(200, 85%, 55%)",
+    icon: Target,
+    title: "Digital Marketing Strategy",
+    description: "Data-driven SEO, PPC campaigns, and performance tracking to maximize ROI.",
+    gradient: "from-violet-500 via-purple-500 to-indigo-500",
+    glow: "rgba(139, 92, 246, 0.25)",
+    span: "col-span-1 lg:col-span-1 row-span-1",
   },
 ];
 
 export const ServicesBento = () => {
-  const cardsRef = useRef<Map<number, HTMLElement>>(new Map());
-  const [activeCard, setActiveCard] = useState<number | null>(null);
-
-  // 3D tilt and glow effect
-  useEffect(() => {
-    const cards = document.querySelectorAll('[data-tilt]');
-    cards.forEach((card) => {
-      const element = card as HTMLElement;
-      const id = parseInt(element.dataset.id || '0');
-
-      element.addEventListener('mousemove', (e) => {
-        const rect = element.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-
-        const rotateX = (-y / rect.height) * 12;
-        const rotateY = (x / rect.width) * 12;
-
-        gsap.to(element, {
-          rotateX: rotateX,
-          rotateY: rotateY,
-          transformPerspective: 1200,
-          duration: 0.3,
-          ease: "power2.out",
-          overwrite: true,
-        });
-
-        // Glow effect follows cursor
-        const glow = element.querySelector('.glow-layer') as HTMLElement;
-        if (glow) {
-          const glowIntensity = Math.min(Math.abs(x) + Math.abs(y) / 100, 1) * 0.3;
-          gsap.to(glow, {
-            scale: 1 + glowIntensity * 0.5,
-            opacity: 0.6 + glowIntensity * 0.4,
-            duration: 0.3,
-            ease: "power2.out",
-          });
-        }
-
-        // Change active card highlight
-        if (activeCard !== id) {
-          setActiveCard(id);
-        }
-      });
-
-      element.addEventListener('mouseleave', () => {
-        gsap.to(element, {
-          rotateX: 0,
-          rotateY: 0,
-          duration: 0.6,
-          ease: "power2.out",
-          overwrite: true,
-        });
-
-        const glow = element.querySelector('.glow-layer') as HTMLElement;
-        if (glow) {
-          gsap.to(glow, {
-            scale: 1,
-            opacity: 0.6,
-            duration: 0.5,
-            ease: "power2.out",
-          });
-        }
-
-        setActiveCard(null);
-      });
-    });
-  }, [activeCard]);
+  const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   return (
-    <section className="relative py-16 sm:py-20 bg-[var(--background)]">
-      {/* Section header */}
-      <div className="container mx-auto px-4 sm:px-6 text-center">
-        <motion.h2
+    <section className="relative py-24 sm:py-32 bg-[var(--background)] overflow-hidden">
+      {/* Background glow effects */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-primary/15 rounded-full blur-[150px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-accent/15 rounded-full blur-[150px]" />
+      </div>
+
+      {/* Section Header */}
+      <div className="container mx-auto px-4 sm:px-6 text-center mb-16 relative z-10">
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: "power2.out" }}
-          className="text-xl sm:text-2xl font-semibold text-foreground mb-4"
+          transition={{ duration: 0.6 }}
         >
-          <span className="text-gradient">What We Do</span>
-        </motion.h2>
-        <p className="text-muted-foreground max-w-lg mx-auto text-sm">
-          Complete creative and marketing solutions tailored to your business needs.
-        </p>
+          <span className="px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-primary/10 text-primary mb-4 inline-block border border-primary/20">
+            Our Expertise
+          </span>
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-display font-bold text-foreground mb-4">
+            What <span className="text-gradient">We Do</span>
+          </h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto text-base sm:text-lg">
+            Comprehensive creative, marketing, and technology solutions tailored to elevate your brand and accelerate growth.
+          </p>
+        </motion.div>
       </div>
 
-      {/* Bento grid */}
-      <div className="container mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-          {services.map((service) => (
-            <motion.div
-              key={service.id}
-              data-tilt={service.id}
-              data-id={service.id}
-              className="group relative bg-[var(--card)] border border-[var(--border)]/30 rounded-2xl p-5 sm:p-6 cursor-pointer transition-all duration-300 hover:border-[var(--border)]/60 hover:shadow-xl hover:shadow-black/10"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: "power2.out" }}
-            >
-              {/* Glow layer (follows cursor) */}
-              <div className="glow-layer absolute inset-0 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{
-                background: `radial-gradient(ellipse at center, ${service.glow}/20 0%, transparent 70%)`,
-              }} />
+      {/* Bento Grid */}
+      <div className="container mx-auto px-4 sm:px-6 relative z-10 max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {services.map((service, index) => {
+            const IconComponent = service.icon;
+            const isHovered = hoveredId === service.id;
 
-              {/* Icon */}
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br to-50% from-gradient mb-4 flex items-center justify-center glow-on-hover" style={{
-                background: `linear-gradient(135deg, ${service.gradient})`,
-              }}>
-                <service.icon className="w-6 h-6 text-white" />
-              </div>
+            return (
+              <motion.div
+                key={service.id}
+                onMouseEnter={() => setHoveredId(service.id)}
+                onMouseLeave={() => setHoveredId(null)}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.08 }}
+                className={`group relative p-8 rounded-3xl bg-[var(--card)]/90 backdrop-blur-xl border border-[var(--border)]/70 shadow-xl hover:border-primary/50 transition-all duration-500 overflow-hidden flex flex-col justify-between ${
+                  service.span || "col-span-1"
+                }`}
+                style={{
+                  boxShadow: isHovered ? `0 20px 40px -15px ${service.glow}` : undefined,
+                }}
+              >
+                {/* Dynamic radial glow on hover */}
+                <div 
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  style={{
+                    background: `radial-gradient(circle at 80% 20%, ${service.glow} 0%, transparent 70%)`
+                  }}
+                />
 
-              {/* Title */}
-              <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2">
-                {service.title}
-              </h3>
+                <div>
+                  {/* Top Header */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div 
+                      className="w-14 h-14 rounded-2xl bg-gradient-to-br flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-500"
+                      style={{ background: `linear-gradient(135deg, ${service.gradient})` }}
+                    >
+                      <IconComponent className="w-7 h-7" />
+                    </div>
 
-              {/* Description */}
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {service.description}
-              </p>
+                    {service.badge && (
+                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-secondary/80 border border-border/60 text-foreground">
+                        {service.badge}
+                      </span>
+                    )}
+                  </div>
 
-              {/* Hover pulse effect */}
-              <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{
-                background: `radial-gradient(ellipse at center, ${service.glow}/10 0%, transparent 70%)`,
-              }} />
-            </motion.div>
-          ))}
+                  {/* Title & Description */}
+                  <h3 className="text-xl sm:text-2xl font-display font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
+                    {service.title}
+                  </h3>
+                  <p className="text-muted-foreground text-sm sm:text-base leading-relaxed mb-6">
+                    {service.description}
+                  </p>
+                </div>
+
+                {/* Footer action link */}
+                <div className="pt-4 border-t border-[var(--border)]/40 flex items-center justify-between">
+                  <Link 
+                    to="/services"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-foreground group-hover:text-primary transition-colors"
+                  >
+                    Explore Service
+                    <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  </Link>
+                  <Sparkles className="w-4 h-4 text-muted-foreground/30 group-hover:text-primary transition-colors" />
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
