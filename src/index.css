@@ -1,5 +1,5 @@
 /* Fonts loaded with display=swap for non-render-blocking */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -260,8 +260,8 @@
     --glow-neon: 0 0 20px hsl(0, 85%, 55% / 0.6), 0 0 40px hsl(0, 85%, 55% / 0.4), 0 0 80px hsl(0, 85%, 55% / 0.2);
 
     /* Font tokens */
-    --font-display: 'Outfit', sans-serif;
-    --font-body: 'Space Grotesk', sans-serif;
+    --font-display: 'Plus Jakarta Sans', sans-serif;
+    --font-body: 'Inter', sans-serif;
   }
 
   .dark {
