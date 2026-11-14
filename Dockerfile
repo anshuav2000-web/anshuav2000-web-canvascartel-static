@@ -7,7 +7,7 @@ WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json bun.lockb* ./
-RUN npm ci --production=false
+RUN npm install --legacy-peer-deps
 
 # Copy source
 COPY . .
